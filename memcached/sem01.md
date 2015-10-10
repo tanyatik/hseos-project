@@ -69,12 +69,12 @@ freeaddrinfo(servinfo); // free the linked-list
 
 Функция `socket` имеет следующий прототип:
 
-`
+```
 #include <sys/types.h>
 #include <sys/socket.h>
 
 int socket(int domain, int type, int protocol);
-`
+```
 
 Для того, чтобы задать ее параметры, мы будем использовать уже заполненную структуру `servinfo`.
 
