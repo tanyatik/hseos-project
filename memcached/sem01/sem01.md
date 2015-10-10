@@ -15,6 +15,8 @@ Memcached -- сетевое приложение, обслуживающее к�
 В результате последнего шага получится файловый дескриптор, с которым можно выполнять операции
 ввода/вывода (read/write или sendv/recv).
 
+Книжка: http://beej.us/guide/bgnet/translations/bgnet_A4_rus.pdf.
+
 ### getaddrinfo
 
 Функция `getaddrinfo` имеет следующий прототип:
@@ -177,3 +179,4 @@ if (bytes_to_write > 0) {  // not all written, probably socket on the other side
 
 
 [1]. http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html#getaddrinfo
+[2]. http://beej.us/guide/bgnet/translations/bgnet_A4_rus.pdf
