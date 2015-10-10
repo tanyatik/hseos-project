@@ -1,21 +1,22 @@
 ### Задание 1. Сервер
 
+Книжка про сетевое программирование: http://beej.us/guide/bgnet/translations/bgnet_A4_rus.pdf.
+
 Memcached -- сетевое приложение, обслуживающее клиентов, которые подключаются к определенному порту.
 
 В этом задании необходимо написать echo-сервер, слушающий на определенном порту.
 
 Чтобы создать сервер (программу, которая принимает соединения), необходимо выполнить следующие действия:
 
-* подготовить структуру `addrinfo`
-* создать сокет
-* связать сокет
-* слушать сокет
-* принять соединение
+* подготовить структуру `addrinfo` (**`getaddrinfo`**)
+* создать сокет сервера (слушающий) (**`socket`**)
+* связать сокет (**`bind`**)
+* слушать сокет (**`listen`**)
+* в цикле принимать соединения (**`accept`**)
 
 В результате последнего шага получится файловый дескриптор, с которым можно выполнять операции
 ввода/вывода (read/write или sendv/recv).
 
-Книжка: http://beej.us/guide/bgnet/translations/bgnet_A4_rus.pdf.
 
 ### getaddrinfo
 
@@ -167,7 +168,7 @@ while ((read_bytes = read(conn_fd, buf, sizeof(buf)) > 0) {
 int write_bytes;
 char* data = buffer.data();
 int bytes_to_write = buffer.size();
-while ((write_bytes = write(conn_fd, data, data + bytes_to_write)) > 0) {
+while ((write_bytes = write(conn_fd, data, bytes_to_write)) > 0) {
     data += write_bytes;
     bytes_to_write -= write_bytes;
 }
