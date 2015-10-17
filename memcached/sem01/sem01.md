@@ -1,19 +1,27 @@
 ### Задание 1. Сервер
 
-Memcached -- сетевое приложение, обслуживающее клиентов, которые подключаются к определенному порту.
+Книжка про сетевое программирование: http://beej.us/guide/bgnet/translations/bgnet_A4_rus.pdf.
 
-В этом задании необходимо написать echo-сервер, слушающий на определенном порту.
+Memcached -- сетевое приложение, обслуживающее клиентов, которые подключаются к определенному порту.
 
 Чтобы создать сервер (программу, которая принимает соединения), необходимо выполнить следующие действия:
 
-* подготовить структуру `addrinfo`
-* создать сокет
-* связать сокет
-* слушать сокет
-* принять соединение
+* подготовить структуру `addrinfo` (**`getaddrinfo`**)
+* создать сокет сервера (слушающий) (**`socket`**)
+* связать сокет (**`bind`**)
+* слушать сокет (**`listen`**)
+* в цикле принимать соединения (**`accept`**)
 
-В результате последнего шага получится файловый дескриптор, с которым можно выполнять операции
-ввода/вывода (read/write или sendv/recv).
+В результате работы функции `accept` получится дескриптор сокета, с которым можно выполнять операции
+ввода/вывода (**`read`**/**`write`** или **`sendv`**/**`recv`**).
+
+### Для сдачи первого задания
+
+1. Написать echo-сервер. При получении запроса он должен вернуть обратно клиенту то же самое, что прочитал.
+Порт, который будет слушать сервер, рекомендую задавать аргументом командной строки.
+Корректно обработать все ошибки всех системных функций.
+2. Запустить сервер, например: `./server 3542` (или `./server`, если вы задаете порт в коде). В другом окне терминала запустить `python test.py 3542`. Убедиться, что последняя команда завершилась успешно.
+3. Создать репозиторий на Github (или любой другой системе контроля версий), ссылку прислать на почту tanyatik@yandex.ru . Пожалуйста, указывайте в теме письма [HSEOS].
 
 ### getaddrinfo
 
@@ -44,11 +52,11 @@ int getaddrinfo(const char *node,
 ```
 int status;
 struct addrinfo hints;
-struct addrinfo *servinfo;   // will point to the results
-const char[] port = "3249";  // CHANGE ME
+struct addrinfo *servinfo;       // will point to the results
+const char[] port = "3249";      // CHANGE ME
 
 memset(&hints, 0, sizeof hints); // make sure the struct is empty
-hints.ai_family = AF_INET;     // IPv4
+hints.ai_family = AF_INET;       // IPv4
 hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
 hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
@@ -165,7 +173,7 @@ while ((read_bytes = read(conn_fd, buf, sizeof(buf)) > 0) {
 int write_bytes;
 char* data = buffer.data();
 int bytes_to_write = buffer.size();
-while ((write_bytes = write(conn_fd, data, data + bytes_to_write)) > 0) {
+while ((write_bytes = write(conn_fd, data, bytes_to_write)) > 0) {
     data += write_bytes;
     bytes_to_write -= write_bytes;
 }
@@ -177,3 +185,4 @@ if (bytes_to_write > 0) {  // not all written, probably socket on the other side
 
 
 [1]. http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html#getaddrinfo
+[2]. http://beej.us/guide/bgnet/translations/bgnet_A4_rus.pdf
