@@ -35,6 +35,33 @@ std::vector<char> ProcessMessage(const std::vector<char>& input);
 McResult ProcessCommand(const McCommand& command);
 ```
 
+Набросок реализации `ProcessMessage`:
+
+```
+std::vector<char> ProcessMessage(const std::vector<char>& input) {
+    McCommand command;
+    
+    // 
+    std::string command_name = ... // считываем строку до пробела
+    command.command = CommandCode(command_name); // вызываем вспомогательную функцию 
+    command.key = ... // считываем строку до пробела
+    command.flags = ... // считываем int32_t
+    command.exp_time = ... // считываем exp_time
+    int32_t N = ... // считываем N
+    if (N > ...) {
+        // неуспех
+    }
+    // считываем data
+    
+    McResult res = ProcessCommand(command);
+    
+    std::vector<char> output;
+    res.Serialize(&output);
+    
+    return output;
+}
+```
+
 *Примечание.* Можно придумать другой дизайн -- это один из возможных вариантов.
 
 ### Один из способов реализации задания.
@@ -59,11 +86,11 @@ enum MC_COMMANDS {
 
 ```
 struct McCommand {
-    MC_COMMAND command_;
-    std::string key_;
-    int32_t flag_;
-    time_t exp_time_;
-    std::vector<char> data_;
+    MC_COMMAND command;
+    std::string key;
+    int32_t flag;
+    time_t exp_time;
+    std::vector<char> data;
 };
 ```
 
