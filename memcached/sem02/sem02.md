@@ -101,7 +101,8 @@ enum MC_RESULT_CODE {
     STORED,
     NOT_STORED,
     EXISTS,
-    NOT_FOUND
+    NOT_FOUND,
+    DELETED
 };
 ```
 
