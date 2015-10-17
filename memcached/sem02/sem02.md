@@ -24,14 +24,15 @@ https://github.com/memcached/memcached/blob/master/doc/protocol.txt#L124
 Функция `ReadCommand` должна принимать данные в формате, описанном в протоколе, и возвращать ответ тоже по
 протоколу.
 ```
-std::vector<char> ReadCommand(const std::vector<char>& input);
+std::vector<char> ProcessMessage(const std::vector<char>& input);
 ```
+
 Функция `ProcessCommand` на текущем этапе выполнения проекта должна обрабатывать код команды и
 возвращать фиктивный ответ.
 Для команды `get` нужно возвращать две записи фиктивных данных.
 
 ```
-McResult ProcessCommand(MC_COMMAND command);
+McResult ProcessCommand(const McCommand& command);
 ```
 
 *Примечание.* Можно придумать другой дизайн -- это один из возможных вариантов.
@@ -62,6 +63,7 @@ struct McCommand {
     std::string key_;
     int32_t flag_;
     time_t exp_time_;
+    std::vector<char> data_;
 };
 ```
 
