@@ -11,4 +11,4 @@ msg = "hello!"
 s.send("hello!")
 res = s.recv(len(msg))
 
-assert msg == ""
+assert msg == res
