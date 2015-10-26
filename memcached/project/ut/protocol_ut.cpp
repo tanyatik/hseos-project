@@ -105,6 +105,6 @@ TEST(Protocol, McResultSerialize) {
         valResult.Serialize(&buffer);
         buffer.Flush();
 
-        ASSERT_EQ(result, "user_123 1445128601 6\r\n12345a\r\nuser_876 1446128601 6\r\n67890z\r\nEND\r\n");
+        ASSERT_EQ(result, "VALUE user_123 1445128601 6\r\n12345a\r\nVALUE user_876 1446128601 6\r\n67890z\r\nEND\r\n");
     }
 }
