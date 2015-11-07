@@ -35,14 +35,14 @@ Trying ::1...
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-**get abc xyz**
+get abc xyz
 VALUE abc 1 5
 Hello
 END
-**set abc 1 1445128601 5**
+set abc 1 1445128601 5
 Hello
 STORED
-**get abc**
+get abc
 VALUE abc 1 5
 Hello
 END
