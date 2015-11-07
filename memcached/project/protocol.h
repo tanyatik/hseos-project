@@ -43,7 +43,7 @@ public:
 
 struct McCommand {
     MC_COMMAND command = CMD_UNKNOWN;
-    std::string key;
+    std::vector<std::string> keys;
     int32_t flags = 0;
     time_t exp_time = 0;
     std::vector<char> data;
@@ -80,7 +80,4 @@ public:
     void Serialize(WBuffer* buffer) const;
 };
 
-/*
-std::vector<char> ProcessMessage(const std::vector<char>& input);
-*/
-McResult ProcessCommand(const McCommand& command);
+
