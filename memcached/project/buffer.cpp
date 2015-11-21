@@ -1,4 +1,8 @@
 #include <stdexcept>
+#include <unistd.h>
+//
+#include <iostream>
+#include <sstream>
 
 #include "buffer.h"
 
@@ -11,7 +15,13 @@ char RBuffer::ReadChar() {
 
 void RBuffer::ReadCharCheck(char check) {
     if (ReadChar() != check) {
-        throw std::runtime_error("Invalid character in input " + std::to_string(buffer_[pos_]) + " should be " + std::to_string(check));
+        std::stringstream msg;
+        msg << "Invalid character in input '"
+            << buffer_[pos_ - 1]
+            << "' should be '"
+            << check
+            << "'";
+        throw std::runtime_error(msg.str());
     }
 }
 
@@ -80,6 +90,61 @@ void WBuffer::WriteBytes(const std::vector<char>& buffer) {
     }
 }
 
+SocketRBuffer::SocketRBuffer(size_t buf_size, int fd)
+        : RBuffer(buf_size)
+        , fd_(fd)
+        , closed_(false) {
+    ReadMore();
+}
+
+void SocketRBuffer::ReadMore() {
+    pos_ = 0;
+    char* data = buffer_.data();
+
+    int rd = read(fd_, data, buffer_.size());
+    end_ = rd;
+
+    if (rd == 0) {
+        close(fd_);
+        closed_ = true;
+        throw std::runtime_error("Failed to read more from SocketRBuffer");
+    }
+}
+
+SocketRBuffer::~SocketRBuffer() {
+    if (!closed_) {
+        close(fd_);
+        closed_ = true;
+    }
+}
+
+
+void SocketWBuffer::Flush() {
+    int to_write = pos_;
+    int write_bytes = 0;
+    char* data = buffer_.data();
+
+    while (write_bytes < to_write && !closed_) {
+        int wr = write(fd_, data, to_write);
+        data += wr;
+        write_bytes += wr;
+        to_write -= wr;
+    }
+
+    if (write_bytes == 0) {
+        close(fd_);
+        closed_ = true;
+        throw std::runtime_error("Failed to write more to SocketWBuffer");
+    }
+    pos_ = 0;
+}
+
+SocketWBuffer::~SocketWBuffer() {
+    if (!closed_) {
+        close(fd_);
+        closed_ = true;
+    }
+}
 
 StringRBuffer::StringRBuffer(size_t buf_size, const std::string& s)
         : RBuffer(buf_size)
@@ -105,4 +170,3 @@ void StringWBuffer::Flush() {
     string_->append(buffer_.begin(), buffer_.begin() + pos_);
     pos_ = 0;
 }
-

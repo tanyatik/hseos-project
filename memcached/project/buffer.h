@@ -52,6 +52,37 @@ protected:
 };
 
 
+class SocketRBuffer : public RBuffer {
+public:
+    SocketRBuffer(size_t buf_size, int fd);
+    ~SocketRBuffer();
+    bool Closed() const { return closed_; }
+    void Clear() { pos_ = 0; end_ = 0; }
+
+protected:
+    virtual void ReadMore() override;
+
+private:
+    int fd_;
+    bool closed_;
+};
+
+
+class SocketWBuffer : public WBuffer {
+public:
+    SocketWBuffer(size_t buf_size, int fd) : WBuffer(buf_size), fd_(fd), closed_(false) {}
+    ~SocketWBuffer();
+    bool Closed() const { return closed_; }
+    void Clear() { pos_ = 0; }
+
+    virtual void Flush() override;
+
+private:
+    int fd_;
+    bool closed_;
+};
+
+
 class StringRBuffer : public RBuffer {
 public:
     StringRBuffer(size_t buf_size, const std::string& s);

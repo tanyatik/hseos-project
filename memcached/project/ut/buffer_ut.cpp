@@ -76,3 +76,37 @@ TEST(WBuffer, WriteBytes) {
     wbuf.Flush();
     EXPECT_EQ("banana", buffer);
 }
+
+TEST(SocketRBuffer, ReadFormattedData) {
+    int fd[2];
+    pipe(fd);
+    write(fd[1], "123 ", 4);
+    SocketRBuffer rbuf(2, fd[0]);
+    EXPECT_EQ(123, rbuf.ReadUint32());
+    EXPECT_EQ(' ', rbuf.ReadChar());
+    write(fd[1], "bananana ", 9);
+    EXPECT_EQ("bananana", rbuf.ReadField(' '));
+    EXPECT_EQ(' ', rbuf.ReadChar());
+
+    // close(fd[1]);
+    // EXPECT_THROW(rbuf.ReadChar(), std::runtime_error);
+}
+
+TEST(SocketWBuffer, WriteFormattedData) {
+    int fd[2];
+    pipe(fd);
+    SocketWBuffer wbuf(2, fd[1]);
+    wbuf.WriteUint32(123);
+    wbuf.WriteChar(' ');
+    wbuf.WriteField("banana");
+
+    char data[1024];
+    int rd = read(fd[0], data, 1023);
+    EXPECT_TRUE(rd > 0);
+    data[rd] = '\0';
+
+    EXPECT_EQ("123 banana", std::string(data));
+
+    // close(fd[0]);
+    // EXPECT_THROW(wbuf.WriteChar('x'), std::runtime_error);
+}
