@@ -57,7 +57,7 @@ TEST(Protocol, McCommandDeserializeGetMultipleKeys) {
 
 TEST(Protocol, McCommandDeserializeDelete) {
     McCommand deleteCommand;
-    std::string input = "delete user_123 888 1445128601 10\r\nnanananana\r\n";
+    std::string input = "delete user_123";
     StringRBuffer buffer(8, input);
     deleteCommand.Deserialize(&buffer);
 
