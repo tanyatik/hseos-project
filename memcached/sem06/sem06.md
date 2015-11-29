@@ -243,8 +243,8 @@ while (true) {
 
 ```
 while (true) {
-    threads.push_back(std::thread([]() {
-        accept_fd = accept(...);
+    accept_fd = accept(...);
+    threads.push_back(std::thread([&memcached, accept_fd]() {
         memcached->ProcessConnection(accept_fd);
     });
 }
